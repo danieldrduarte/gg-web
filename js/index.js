@@ -30,13 +30,9 @@ new Vue({
                                html += '<ul class="list-group">';
                                html += ' <li class="list-group-item active">' + item.nome + '</li>';
 
-
                                $.each(item.filhos, function(key,filho){
-
                                    html += self.montaHtmlFilhos(filho);
-
                                });
-
 
                                html += '</ul>';
                                html += '</div>';
@@ -49,16 +45,35 @@ new Vue({
                this.arvores = '';
            }
        },
+       salvar: function () {
+           var self = this;
+           if (this.orgao && this.banca) {
+               axios.post('http://localhost/api/v1/programa', {
+                   orgao_id: 'orgao',
+                   banca_id: 'banca',
+                   nome: 'teste',
+                   headers: {
+                       "Access-Control-Allow-Origin": "*",
+                       "Access-Control-Allow-Headers": "Authorization",
+                       "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+                       "Content-Type": "application/json;charset=UTF-8"
+                   },
+               }).then(function (response) {
+                   alert('salvo com sucesso');
+                   self.cancelar();
+               });
+           }else{
+               this.arvores = '';
+           }
+       },
        montaHtmlFilhos: function (filho){
-           console.log(filho);
            let self = this;
-
            let icone = '';
            for(let i = 2; i < (filho.ordem.length / 3); i++){
-               icone += '  <i class="fas fa-angle-double-right"></i>';
+               icone += '--------';
            }
 
-           let html = '<li class="list-group-item">' + icone + ' ' + filho.nome + ' (' + filho.total_questoes + ')</li>';
+           let html = '<li class="list-group-item"><span class="linha">' + icone + ' </span>' + filho.nome + '  <span class="badge badge-success">' + filho.total_questoes + '</span></li>';
 
            if(filho.filhos){
                $.each(filho.filhos, function(chave, neto){
@@ -66,6 +81,11 @@ new Vue({
                });
            }
            return html;
+       },
+       cancelar: function (){
+           this.arvores = '';
+           this.banca = "";
+           this.orgao = "";
        }
    }
  });

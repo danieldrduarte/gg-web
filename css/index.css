@@ -11,6 +11,18 @@ main {
   margin-top: 65px;
 }
 
+.hide {
+  display: none;
+}
+
+.badge {
+  vertical-align: text-top;
+}
+
+.linha {
+  color: #a7aaad;
+}
+
 .form-group label{
   font-weight: bolder;
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Árvore de assuntos - Daniel Duarte</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+
+<body>
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">
+    <img src="img/tree.png" class="img-logo">
+    Árvore de assuntos
+  </a>
+  </nav>
+</header>
+
+<main id="app" role="main">
+
+  <section class="jumbotron">
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <div class="titulo  text-center">
+            <h1>Programa de estudos</h1>
+          </div>
+          <div class="form-group">
+            <label for="orgao_id">Orgão</label>
+            <select class="form-control" id="orgao_id" v-model="orgao" @change="carregaArvores()">
+              <option value="">Selecione...</option>
+              <option v-for="orgao in orgaos" v-bind:value="orgao.id">{{orgao.nome}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="banca_id">Banca</label>
+            <select class="form-control" id="banca_id" v-model="banca" @change="carregaArvores()">
+              <option value="">Selecione...</option>
+              <option v-for="banca in bancas" v-bind:value="banca.id">{{banca.nome}}</option>
+            </select>
+          </div>
+          <div class="botoes text-center">
+            <button type="button" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn btn-secondary">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-show="arvores" class="card mt-3">
+      <div class="card-body">
+        <div class="titulo  text-center">
+          <h1>Programa de estudos</h1>
+        </div>
+        <div v-html="arvores"></div>
+      </div>
+    </div>
+
+
+  </section>
+</main>
+
+<footer class="footer fixed-bottom text-center">
+  <div class="container">
+    <span class="text-muted">Daniel Duarte - 2019 © Todos os direitos reservados ®</span>
+  </div>
+</footer>
+
+</body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+
+</html>

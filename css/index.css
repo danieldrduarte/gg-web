@@ -1,0 +1,22 @@
+body{
+  background-color: #e9ecef;
+}
+
+.img-logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+main {
+  margin-top: 65px;
+}
+
+.form-group label{
+  font-weight: bolder;
+}
+
+footer {
+  height: 30px;
+  padding: 3px;
+  background-color: #fff;
+}

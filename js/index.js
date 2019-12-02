@@ -91,7 +91,7 @@ new Vue({
        },
        salvar: function () {
            var self = this;
-           if (self.formulario.orgao && self.formulario.banca) {
+           if (self.formulario.nome && self.formulario.orgao && self.formulario.banca) {
                let url = 'http://localhost/api/v1/programa';
                let data = {orgao_id: this.formulario.orgao,banca_id: this.formulario.banca,nome: this.formulario.nome};
                let msg = "Registro salvo com sucesso!";
@@ -113,6 +113,7 @@ new Vue({
                    });
                }
            }else{
+               alert('Preencha os campos obrigatórios!')
                this.arvores = '';
            }
        },

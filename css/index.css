@@ -25,6 +25,11 @@ main {
   padding: 30px 0px;
 }
 
+span.required {
+  font-weight: bolder;
+  color: red;
+}
+
 .badge {
   vertical-align: text-top;
 }

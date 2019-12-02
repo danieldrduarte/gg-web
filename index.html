@@ -22,34 +22,89 @@
 <main id="app" role="main">
 
   <section class="jumbotron">
-    <div class="container">
+    <div v-show="tela == 'lista'" class="container">
+      <div class="card">
+        <div class="card-body">
+          <div class="titulo  text-center">
+            <h1>Programas de estudo</h1>
+          </div>
+          <div>
+            <div class="div-btn-novo">
+              <button type="button" class="btn btn-primary" @click="exibeFormulario()"><i class="far fa-save"></i> Cadastrar novo programa</button>
+            </div>
+            <table v-show="programas.length > 0" class="table table-bordered table-striped">
+              <thead>
+              <tr>
+                <th scope="col">Ações</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Orgão</th>
+                <th scope="col">Banca</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="programa in programas">
+                <td class="text-center">
+                  <button type="button" @click="exibeFormulario(programa.id)" class="btn btn-success" title="Editar"><i class="fas fa-edit"></i></button>
+                  <button type="button" @click="excluir(programa.id)" class="btn btn-danger" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                </td>
+                <td>{{ programa.nome }}</td>
+                <td>{{ programa.orgao.sigla }} - {{ programa.orgao.nome }}</td>
+                <td>{{ programa.banca.nome }}</td>
+              </tr>
+              </tbody>
+            </table>
+            <div v-show="programas.length == 0" class="div-sem-programas">
+              <h3>Nenhum Programa de estudo cadastrado!</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-show="tela == 'cadastro'" class="container">
       <div class="card">
         <div class="card-body">
           <div class="titulo  text-center">
             <h1>Programa de estudos</h1>
           </div>
-          <div class="form-group">
-            <label for="orgao_id">Orgão</label>
-            <select class="form-control" id="orgao_id" v-model="orgao" @change="carregaArvores()">
-              <option value="">Selecione...</option>
-              <option v-for="orgao in orgaos" v-bind:value="orgao.id">{{orgao.nome}}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="banca_id">Banca</label>
-            <select class="form-control" id="banca_id" v-model="banca" @change="carregaArvores()">
-              <option value="">Selecione...</option>
-              <option v-for="banca in bancas" v-bind:value="banca.id">{{banca.nome}}</option>
-            </select>
-          </div>
-          <div class="botoes text-center">
-            <button type="button" class="btn btn-primary" @click="salvar()">Salvar</button>
-            <button type="button" class="btn btn-secondary" @click="cancelar()">Cancelar</button>
-          </div>
+          <form class="novalidate">
+            <div class="form-group">
+              <label for="orgao_id">Nome</label>
+              <input type="text" required v-model="formulario.nome" class="form-control">
+              <div class="invalid-feedback">
+                Campo obrigatório
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="orgao_id">Orgão</label>
+              <select required class="form-control" id="orgao_id" v-model="formulario.orgao" @change="carregaArvores()">
+                <option value="">Selecione...</option>
+                <option v-for="orgao in orgaos" v-bind:value="orgao.id">{{orgao.nome}}</option>
+              </select>
+              <div class="invalid-feedback">
+                Campo obrigatório
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="banca_id">Banca</label>
+              <select required class="form-control" id="banca_id" v-model="formulario.banca" @change="carregaArvores()">
+                <option value="">Selecione...</option>
+                <option v-for="banca in bancas" v-bind:value="banca.id">{{banca.nome}}</option>
+              </select>
+              <div class="invalid-feedback">
+                Campo obrigatório
+              </div>
+            </div>
+            <div class="botoes text-center">
+              <button type="button" class="btn btn-primary" @click="salvar()"><i class="far fa-save"></i> {{ (formulario.id != '' ? 'Editar' : 'Salvar') }}</button>
+              <button type="button" class="btn btn-secondary" @click="exibeLista()"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-    <div class="container">
+
+    <div v-show="tela == 'cadastro'" class="container">
       <div v-if="arvores">
         <div class="card-body">
           <div class="titulo text-center">

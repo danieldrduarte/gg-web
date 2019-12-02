@@ -1,9 +1,15 @@
 var data = {
     orgaos: [],
     bancas: [],
+    programas: [],
+    formulario: {
+        banca : '',
+        orgao : '',
+        nome : '',
+        id: ''
+    },
     arvores: '',
-    banca: '',
-    orgao: '',
+    tela: ''
 };
 
 new Vue({ 
@@ -17,12 +23,40 @@ new Vue({
         axios.get('http://localhost/api/v1/banca')
             .then( response => (this.bancas = response.data.data))
             .catch( error => console.log(error));
+
+        this.exibeLista();
    },
    methods: {
+       exibeFormulario: function (id) {
+           let self = this;
+           this.limpaCampos();
+
+           if(id){
+               axios.get('http://localhost/api/v1/programa/' + id)
+                   .then(function (response) {
+                       self.formulario.id = response.data.data.id;
+                       self.formulario.orgao = response.data.data.orgao_id;
+                       self.formulario.banca = response.data.data.banca_id;
+                       self.formulario.nome = response.data.data.nome;
+                       self.carregaArvores();
+                   });
+           }
+
+           this.tela = 'cadastro';
+       },
+       exibeLista: function () {
+           this.carregaLista();
+           this.tela = 'lista';
+       },
+       carregaLista: function () {
+           axios.get('http://localhost/api/v1/programa')
+               .then( response => (this.programas = response.data.data))
+               .catch( error => console.log(error));
+       },
        carregaArvores: function () {
            var self = this;
-           if (this.orgao && this.banca) {
-               axios.get('http://localhost/api/v1/arvores-assuntos/orgao/' + this.orgao + '/banca/' + this.banca)
+           if (this.formulario.orgao && this.formulario.banca) {
+               axios.get('http://localhost/api/v1/arvores-assuntos/orgao/' + this.formulario.orgao + '/banca/' + this.formulario.banca)
                    .then(function (response) {
                        var html = '<div class="row" style="margin-top: 10px">';
                            $.each(response.data.data, function(chave,item){
@@ -45,23 +79,39 @@ new Vue({
                this.arvores = '';
            }
        },
+       excluir: function(id) {
+           var self = this;
+           let url = 'http://localhost/api/v1/programa/' + id;
+           let msg = "Registro excluído com sucesso!";
+
+           axios.delete(url).then(function (response) {
+               alert(msg);
+               self.exibeLista();
+           });
+       },
        salvar: function () {
            var self = this;
-           if (this.orgao && this.banca) {
-               axios.post('http://localhost/api/v1/programa', {
-                   orgao_id: 'orgao',
-                   banca_id: 'banca',
-                   nome: 'teste',
-                   headers: {
-                       "Access-Control-Allow-Origin": "*",
-                       "Access-Control-Allow-Headers": "Authorization",
-                       "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
-                       "Content-Type": "application/json;charset=UTF-8"
-                   },
-               }).then(function (response) {
-                   alert('salvo com sucesso');
-                   self.cancelar();
-               });
+           if (self.formulario.orgao && self.formulario.banca) {
+               let url = 'http://localhost/api/v1/programa';
+               let data = {orgao_id: this.formulario.orgao,banca_id: this.formulario.banca,nome: this.formulario.nome};
+               let msg = "Registro salvo com sucesso!";
+
+               if(self.formulario.id != '') {
+                    url += '/' + self.formulario.id;
+                    msg = "Registro atualizado com sucesso!";
+
+                   axios.put(url, data).then(function (response) {
+                       alert(msg);
+                       self.limpaCampos();
+                       self.exibeLista();
+                   });
+               }else{
+                   axios.post(url, data).then(function (response) {
+                       alert(msg);
+                       self.limpaCampos();
+                       self.exibeLista();
+                   });
+               }
            }else{
                this.arvores = '';
            }
@@ -82,10 +132,12 @@ new Vue({
            }
            return html;
        },
-       cancelar: function (){
+       limpaCampos: function (){
            this.arvores = '';
-           this.banca = "";
-           this.orgao = "";
+           this.formulario.id = "";
+           this.formulario.banca = "";
+           this.formulario.orgao = "";
+           this.formulario.nome = "";
        }
    }
  });
